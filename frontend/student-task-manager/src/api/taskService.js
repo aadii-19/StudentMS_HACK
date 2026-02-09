@@ -67,9 +67,7 @@ export const taskService = {
   // Update task status (PATCH)
   updateTaskStatus: async (id, status) => {
     try {
-      const response = await api.patch(`/${id}/status`, null, {
-        params: { status }
-      });
+      const response = await api.patch(`/${id}/status`, { status });
       return response.data;
     } catch (error) {
       console.error(`Error updating status for task ${id}:`, error);
