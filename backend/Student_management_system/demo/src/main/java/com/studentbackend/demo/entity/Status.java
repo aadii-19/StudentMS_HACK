@@ -1,4 +1,6 @@
 package com.studentbackend.demo.entity;
 
-public class Status {
+public enum Status {
+    PENDING,
+    COMPLETED
 }

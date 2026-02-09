@@ -1,4 +1,7 @@
 package com.studentbackend.demo.entity;
 
-public class Priority {
+public enum Priority {
+    LOW,
+    MEDIUM,
+    HIGH
 }
