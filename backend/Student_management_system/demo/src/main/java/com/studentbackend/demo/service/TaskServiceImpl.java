@@ -53,14 +53,12 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public Task updateTask(Long id, Task updatedTask) {
-        Task existing = getTaskById(id);
-
+        Task existing = this.getTaskById(id);
         existing.setTitle(updatedTask.getTitle());
         existing.setDescription(updatedTask.getDescription());
         existing.setDueDate(updatedTask.getDueDate());
         existing.setPriority(updatedTask.getPriority());
-        existing.setStatus(updatedTask.getStatus());
-
+        existing.setStatus(existing.getStatus());
         return taskRepository.save(existing);
     }
 
