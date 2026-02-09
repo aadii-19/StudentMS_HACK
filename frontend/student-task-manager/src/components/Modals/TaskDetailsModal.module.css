@@ -1,0 +1,186 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.statusBadge {
+    display: flex;
+    gap: var(--spacing-sm);
+}
+
+.badge {
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: var(--radius-full);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.low {
+    background-color: #ecfdf5;
+    color: #059669;
+}
+
+.medium {
+    background-color: #fffbeb;
+    color: #d97706;
+}
+
+.high {
+    background-color: #fef2f2;
+    color: #dc2626;
+}
+
+.completedBadge {
+    background-color: #e5e7eb;
+    color: var(--text-secondary);
+}
+
+.pendingBadge {
+    background-color: #e0f2fe;
+    color: #0284c7;
+}
+
+.date {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+}
+
+.title {
+    margin: 0;
+    font-size: 1.5rem;
+    color: var(--text-primary);
+}
+
+.description label {
+    display: block;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+    font-weight: 600;
+    margin-bottom: var(--spacing-xs);
+}
+
+.description p {
+    line-height: 1.6;
+    color: var(--text-primary);
+    white-space: pre-wrap;
+    background: var(--background-color);
+    padding: var(--spacing-md);
+    border-radius: var(--radius-md);
+}
+
+.meta {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    display: flex;
+    gap: var(--spacing-lg);
+    border-top: 1px solid var(--border-color);
+    padding-top: var(--spacing-sm);
+}
+
+.actions {
+    display: flex;
+    gap: var(--spacing-md);
+    margin-top: var(--spacing-sm);
+    padding-top: var(--spacing-md);
+    border-top: 1px solid var(--border-color);
+}
+
+.actionButton {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-sm);
+    border-radius: var(--radius-md);
+    font-weight: 500;
+    transition: all var(--transition-fast);
+    background-color: var(--background-color);
+    color: var(--text-primary);
+}
+
+.actionButton:hover:not(:disabled) {
+    background-color: #e5e7eb;
+}
+
+.actionButton:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.deleteButton {
+    color: var(--danger-color);
+    background-color: #fef2f2;
+}
+
+.deleteButton:hover {
+    background-color: #fee2e2;
+}
+
+/* Edit Form Styles */
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+}
+
+.formGroup {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+}
+
+.input,
+.textarea,
+.select {
+    padding: var(--spacing-sm);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    width: 100%;
+}
+
+.row {
+    display: flex;
+    gap: var(--spacing-md);
+}
+
+.row .formGroup {
+    flex: 1;
+}
+
+.editActions {
+    display: flex;
+    justify-content: flex-end;
+    gap: var(--spacing-md);
+    margin-top: var(--spacing-md);
+}
+
+.cancelButton,
+.saveButton {
+    padding: var(--spacing-sm) var(--spacing-lg);
+    border-radius: var(--radius-md);
+    font-weight: 500;
+}
+
+.cancelButton {
+    background: transparent;
+    border: 1px solid var(--border-color);
+}
+
+.saveButton {
+    background: var(--primary-color);
+    color: white;
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+}
