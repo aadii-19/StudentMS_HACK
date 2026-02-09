@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import TaskCard from './TaskCard';
 import TaskDetailsModal from '../Modals/TaskDetailsModal';
 import { FaTasks } from 'react-icons/fa';
@@ -6,6 +6,19 @@ import styles from './TaskList.module.css';
 
 const TaskList = ({ tasks, loading, error, onUpdate, onDelete, onStatusToggle }) => {
     const [selectedTask, setSelectedTask] = useState(null);
+
+    // Sync selectedTask with updated task data when tasks array changes
+    useEffect(() => {
+        if (selectedTask) {
+            const updatedTask = tasks.find(t => t.id === selectedTask.id);
+            if (updatedTask) {
+                setSelectedTask(updatedTask);
+            } else {
+                // Task was deleted, close the modal
+                setSelectedTask(null);
+            }
+        }
+    }, [tasks]);
 
     if (loading) {
         return (

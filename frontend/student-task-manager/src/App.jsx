@@ -5,6 +5,10 @@ import TaskList from './components/Tasks/TaskList';
 import TaskHistory from './components/Tasks/TaskHistory';
 import AddTaskModal from './components/Modals/AddTaskModal';
 import SummaryBar from './components/SummaryBar/SummaryBar';
+// Switch between mock and real service:
+// For testing (no backend): use mockTaskService
+// For production (with backend): use taskService
+// import { taskService } from './api/mockTaskService';
 import { taskService } from './api/taskService';
 import styles from './App.module.css';
 
