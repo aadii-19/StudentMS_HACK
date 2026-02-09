@@ -80,4 +80,4 @@ const TaskCard = ({ task, onEdit, onDelete, onStatusToggle, onClick }) => {
     );
 };
 
-export default TaskCard;
+export default React.memo(TaskCard);

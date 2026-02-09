@@ -110,7 +110,7 @@
 }
 
 .actionButton:hover:not(:disabled) {
-    background-color: #e5e7eb;
+    background-color: var(--surface-hover);
 }
 
 .actionButton:disabled {
@@ -120,11 +120,12 @@
 
 .deleteButton {
     color: var(--danger-color);
-    background-color: #fef2f2;
+    background-color: rgba(239, 68, 68, 0.1);
+    border: 1px solid rgba(239, 68, 68, 0.2);
 }
 
 .deleteButton:hover {
-    background-color: #fee2e2;
+    background-color: rgba(239, 68, 68, 0.2);
 }
 
 /* Edit Form Styles */
@@ -147,6 +148,18 @@
     border: 1px solid var(--border-color);
     border-radius: var(--radius-md);
     width: 100%;
+    background-color: var(--background-color);
+    color: var(--text-primary);
+    transition: all var(--transition-fast);
+}
+
+.input:focus,
+.textarea:focus,
+.select:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 10px rgba(139, 92, 246, 0.5);
+    /* Neon Glow */
 }
 
 .row {

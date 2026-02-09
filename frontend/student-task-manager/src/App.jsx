@@ -11,8 +11,10 @@ import SummaryBar from './components/SummaryBar/SummaryBar';
 // import { taskService } from './api/mockTaskService';
 import { taskService } from './api/taskService';
 import styles from './App.module.css';
+import useTheme from './hooks/useTheme';
 
 const App = () => {
+  const { theme, toggleTheme } = useTheme();
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -27,37 +29,21 @@ const App = () => {
   const [isAddTaskOpen, setIsAddTaskOpen] = useState(false);
   const [viewMode, setViewMode] = useState('active'); // 'active' | 'history'
 
-  const fetchTasks = useCallback(async () => {
-    setLoading(true);
+  /* 
+    Optimized Fetch: 'silent' parameter prevents loading spinner flicker 
+    on background updates.
+  */
+  const fetchTasks = useCallback(async (silent = false) => {
+    if (!silent) setLoading(true);
     setError(null);
     try {
-      // Backend filtering/sorting
-      const params = {
-        sort: 'dueDate', // API default maybe?
-        // We might need to handle sort direction if API supports it, 
-        // e.g., sort=dueDate,asc or direction=asc
-        // Assuming API might take simple sort param or handled in frontend.
-        // Prompt says "Get all tasks... Filter & sort via query params"
-        // Let's pass what we have.
-      };
-
-      // If we are searching or filtering, we might need to handle client-side vs server-side
-      // Prompt says: "Real-time filtering. Sort Dropdown... Uses backend sorting API"
-
-      // Let's try to pass params to getAllTasks
       const fetchedTasks = await taskService.getAllTasks({
         priority: filters.priority || undefined,
         status: filters.status || undefined,
-        // Depending on backend implementation of sort
       });
 
-      // Fetch summary
       const fetchedSummary = await taskService.getTaskSummary();
       setSummary(fetchedSummary);
-
-      // Client-side processing for Search & Sort (if backend doesn't fully support all combos or for responsiveness)
-      // "Real-time filtering (debounced)" usually implies fetching.
-      // "Search tasks by: title, id"
 
       let processedTasks = fetchedTasks;
 
@@ -70,8 +56,7 @@ const App = () => {
         );
       }
 
-      // Apply Sort (if backend API sorting isn't sufficient or complex)
-      // "Sort tasks by due date (ascending)"
+      // Apply Sort
       if (sortOrder) {
         processedTasks.sort((a, b) => {
           const dateA = new Date(a.dueDate);
@@ -84,55 +69,73 @@ const App = () => {
     } catch (err) {
       setError('Failed to load tasks. Please try again.');
     } finally {
-      setLoading(false);
+      if (!silent) setLoading(false);
     }
   }, [filters, sortOrder, searchQuery]);
 
-  // Initial fetch and when dependencies change
+  // Initial fetch
   useEffect(() => {
     fetchTasks();
   }, [fetchTasks]);
 
-  const handleCreateTask = async (taskData) => {
+  const handleCreateTask = useCallback(async (taskData) => {
+    // Optimistic expectation: Loader will show, but we can also just append locally if we knew the ID.
+    // For creation, a loader/refresh is acceptable.
     try {
       await taskService.createTask(taskData);
-      fetchTasks();
+      fetchTasks(true); // Silent refresh
       setIsAddTaskOpen(false);
     } catch (err) {
       alert('Failed to create task');
     }
-  };
+  }, [fetchTasks]);
 
-  const handleUpdateTask = async (id, taskData) => {
+  const handleUpdateTask = useCallback(async (id, taskData) => {
+    // Optimistic Update
+    const originalTasks = [...tasks];
+    setTasks(prev => prev.map(t => t.id === id ? { ...t, ...taskData } : t));
+
     try {
       await taskService.updateTask(id, taskData);
-      fetchTasks();
+      fetchTasks(true); // Silent sync
     } catch (err) {
+      setTasks(originalTasks); // Revert
       alert('Failed to update task');
     }
-  };
+  }, [tasks, fetchTasks]);
 
-  const handleDeleteTask = async (id) => {
+  const handleDeleteTask = useCallback(async (id) => {
+    // Optimistic Delete
+    const originalTasks = [...tasks];
+    setTasks(prev => prev.filter(t => t.id !== id));
+
     try {
       await taskService.deleteTask(id);
-      fetchTasks();
+      fetchTasks(true); // Silent sync
     } catch (err) {
+      setTasks(originalTasks); // Revert
       alert('Failed to delete task');
     }
-  };
+  }, [tasks, fetchTasks]);
 
-  const handleStatusToggle = async (id, currentStatus) => {
+  const handleStatusToggle = useCallback(async (id, currentStatus) => {
     const newStatus = currentStatus === 'PENDING' ? 'COMPLETED' : 'PENDING';
+
+    // Optimistic Toggle
+    const originalTasks = [...tasks];
+    setTasks(prev => prev.map(t => t.id === id ? { ...t, status: newStatus } : t));
+
     try {
       await taskService.updateTaskStatus(id, newStatus);
-      fetchTasks();
+      fetchTasks(true); // Silent sync
     } catch (err) {
+      setTasks(originalTasks); // Revert
       alert('Failed to update status');
     }
-  };
+  }, [tasks, fetchTasks]);
 
   return (
-    <div className={styles.app}>
+    <div className={styles.app} data-theme={theme}>
       <Header />
 
       <main className={styles.main}>
@@ -143,6 +146,8 @@ const App = () => {
           filters={filters}
           onFilterChange={setFilters}
           onAddTaskClick={() => setIsAddTaskOpen(true)}
+          theme={theme}
+          toggleTheme={toggleTheme}
         />
 
         <div className={styles.contentContainer}>
@@ -163,18 +168,7 @@ const App = () => {
 
           {viewMode === 'active' ? (
             <TaskList
-              tasks={tasks} // TaskList should filter or show all? 
-              // Usually "Active Tasks" in this context might mean "Tasks to be done"
-              // But the Main Content is "Task List".
-              // TaskHistory is strictly "Completed + Pending Future".
-              // Let's pass filtered active tasks if ViewMode logic dictates,
-              // or let TaskList show "everything currently fetched" (which is filtered by Navbar).
-              // Navbar filters affect the "Task List".
-              // TaskHistory works on "existing task data".
-              // So I should pass `tasks` to both and let them render/filter.
-              // Logic:
-              // If Active Tab: Show TaskList (which respects Navbar Filters)
-              // If History Tab: Show TaskHistory (which applies its own READ-ONLY logic)
+              tasks={tasks}
               loading={loading}
               error={error}
               onUpdate={handleUpdateTask}

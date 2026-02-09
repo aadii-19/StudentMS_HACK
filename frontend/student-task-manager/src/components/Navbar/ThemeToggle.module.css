@@ -1,0 +1,65 @@
+.toggle {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    margin-left: var(--spacing-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.slider {
+    width: 52px;
+    height: 28px;
+    background-color: var(--surface-hover);
+    border-radius: 999px;
+    position: relative;
+    transition: background-color var(--transition-normal);
+    display: flex;
+    align-items: center;
+    padding: 2px;
+    border: 1px solid var(--border-color);
+}
+
+[data-theme='light'] .slider {
+    background-color: #e5e7eb;
+    border-color: #d1d5db;
+}
+
+[data-theme='dark'] .slider {
+    background-color: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+.iconWrapper {
+    width: 24px;
+    height: 24px;
+    background-color: #ffffff;
+    border-radius: 50%;
+    position: absolute;
+    left: 2px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform var(--transition-normal), background-color var(--transition-normal);
+    box-shadow: var(--shadow-sm);
+}
+
+[data-theme='dark'] .iconWrapper {
+    transform: translateX(24px);
+    background-color: var(--primary-color);
+    /* Violet knob in dark mode */
+    box-shadow: 0 0 10px var(--primary-color);
+    /* Neon glow */
+}
+
+.iconSun {
+    color: #f59e0b;
+    font-size: 14px;
+}
+
+.iconMoon {
+    color: #ffffff;
+    font-size: 14px;
+}

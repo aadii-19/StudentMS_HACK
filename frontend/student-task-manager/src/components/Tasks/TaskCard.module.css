@@ -1,7 +1,6 @@
 .card {
     background-color: var(--surface-color);
-    border: 1px solid var(--border-color);
-    border-radius: var(--radius-md);
+    border-radius: var(--radius-lg);
     padding: var(--spacing-lg);
     display: flex;
     flex-direction: column;
@@ -10,19 +9,102 @@
     cursor: pointer;
     position: relative;
     overflow: hidden;
-    box-shadow: var(--shadow-sm);
     height: 100%;
+
+    /* Gradient Border Setup */
+    border: 1px solid transparent;
+    background-clip: padding-box;
+
+    /* Shadow */
+    --card-shadow-color: rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 6px -1px var(--card-shadow-color);
+}
+
+[data-theme='dark'] .card {
+    background-color: rgba(24, 24, 27, 0.4);
+    /* Glassy Dark */
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    /* Subtle inner border */
+}
+
+/* Pseudo-element for Gradient Border */
+.card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: var(--radius-lg);
+    padding: 1px;
+    background: var(--gradient-default);
+    mask:
+        linear-gradient(#fff 0 0) content-box,
+        linear-gradient(#fff 0 0);
+    -webkit-mask:
+        linear-gradient(#fff 0 0) content-box,
+        linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+    opacity: 0.5;
+    /* Subtle by default */
+    transition: opacity var(--transition-fast);
+}
+
+.card:hover::before {
+    opacity: 1;
+    /* Pop on hover */
+}
+
+/* Priority-based Gradient Borders & Shadows */
+.card:has(.high)::before {
+    background: var(--gradient-high);
+}
+
+.card:has(.high) {
+    --card-shadow-color: rgba(239, 68, 68, 0.3);
+}
+
+.card:has(.medium)::before {
+    background: var(--gradient-medium);
+}
+
+.card:has(.medium) {
+    --card-shadow-color: rgba(245, 158, 11, 0.3);
+}
+
+.card:has(.low)::before {
+    background: var(--gradient-low);
+}
+
+.card:has(.low) {
+    --card-shadow-color: rgba(16, 185, 129, 0.3);
+}
+
+.card.completed::before {
+    background: var(--gradient-completed);
+}
+
+.card.completed {
+    --card-shadow-color: rgba(59, 130, 246, 0.2);
 }
 
 .card:hover {
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-md);
-    border-color: var(--primary-color);
+    transform: translateY(-4px);
+    box-shadow:
+        0 10px 15px -3px var(--card-shadow-color),
+        0 4px 6px -4px var(--card-shadow-color);
+}
+
+[data-theme='dark'] .card:hover {
+    box-shadow:
+        0 0 20px -5px var(--card-shadow-color),
+        inset 0 0 20px -10px var(--card-shadow-color);
+    /* Inner glow too */
 }
 
 .completed {
     opacity: 0.75;
-    background-color: #f9f9f9;
+    background-color: var(--surface-hover);
 }
 
 .title {
@@ -31,6 +113,12 @@
     color: var(--text-primary);
     margin: 0;
     line-height: 1.4;
+    letter-spacing: -0.01em;
+}
+
+[data-theme='dark'] .title {
+    text-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+    /* Subtle text glow */
 }
 
 .completed .title {
@@ -45,8 +133,10 @@
     flex: 1;
     display: -webkit-box;
     -webkit-line-clamp: 2;
+    line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
+    /* Fix: previously just hidden, now standard */
     margin-bottom: var(--spacing-sm);
 }
 
@@ -64,7 +154,7 @@
 
 .badge {
     font-size: 0.75rem;
-    font-weight: 600;
+    font-weight: 700;
     padding: 2px 8px;
     border-radius: var(--radius-full);
     text-transform: uppercase;
@@ -72,28 +162,26 @@
 }
 
 .low {
-    background-color: #ecfdf5;
-    color: #059669;
+    background-color: rgba(16, 185, 129, 0.1);
+    color: var(--success-color);
+    border: 1px solid rgba(16, 185, 129, 0.2);
 }
 
 .medium {
-    background-color: #fffbeb;
-    color: #d97706;
+    background-color: rgba(245, 158, 11, 0.1);
+    color: var(--warning-color);
+    border: 1px solid rgba(245, 158, 11, 0.2);
 }
 
 .high {
-    background-color: #fef2f2;
-    color: #dc2626;
-}
-
-.badgeOverdue {
-    background-color: #fee2e2;
-    color: #ef4444;
+    background-color: rgba(239, 68, 68, 0.1);
+    color: var(--danger-color);
+    border: 1px solid rgba(239, 68, 68, 0.2);
 }
 
 .date {
     font-size: 0.75rem;
-    color: var(--text-secondary);
+    color: var(--text-tertiary);
     font-weight: 500;
 }
 
@@ -111,6 +199,11 @@
     padding-top: var(--spacing-md);
 }
 
+[data-theme='dark'] .footer {
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    /* Softer footer border */
+}
+
 .actions {
     display: flex;
     gap: var(--spacing-xs);
@@ -124,13 +217,8 @@
 }
 
 .iconButton:hover {
-    background-color: var(--background-color);
+    background-color: var(--surface-hover);
     color: var(--text-primary);
-}
-
-.iconButton:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
 }
 
 .statusButton {
@@ -145,19 +233,13 @@
 }
 
 .statusCompleted {
-    background-color: var(--background-color);
+    background-color: var(--surface-hover);
     color: var(--text-secondary);
-}
-
-.statusCompleted:hover {
-    background-color: #e5e7eb;
+    border: 1px solid var(--border-color);
 }
 
 .statusPending {
-    background-color: #ecfdf5;
-    color: #059669;
-}
-
-.statusPending:hover {
-    background-color: #d1fae5;
+    background-color: rgba(16, 185, 129, 0.1);
+    color: var(--success-color);
+    border: 1px solid rgba(16, 185, 129, 0.2);
 }

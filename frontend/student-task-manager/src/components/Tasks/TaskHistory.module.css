@@ -34,6 +34,11 @@
 .historyItem:hover {
     transform: translateX(4px);
     border-color: var(--primary-color);
+    box-shadow: var(--shadow-md);
+}
+
+[data-theme='dark'] .historyItem:hover {
+    box-shadow: var(--shadow-glow);
 }
 
 .statusIndicator {
@@ -80,21 +85,25 @@
     padding: 2px 6px;
     border-radius: var(--radius-sm);
     text-transform: uppercase;
+    letter-spacing: 0.05em;
 }
 
 .low {
-    background-color: #ecfdf5;
-    color: #059669;
+    background-color: rgba(16, 185, 129, 0.1);
+    color: var(--success-color);
+    border: 1px solid rgba(16, 185, 129, 0.2);
 }
 
 .medium {
-    background-color: #fffbeb;
-    color: #d97706;
+    background-color: rgba(245, 158, 11, 0.1);
+    color: var(--warning-color);
+    border: 1px solid rgba(245, 158, 11, 0.2);
 }
 
 .high {
-    background-color: #fef2f2;
-    color: #dc2626;
+    background-color: rgba(239, 68, 68, 0.1);
+    color: var(--danger-color);
+    border: 1px solid rgba(239, 68, 68, 0.2);
 }
 
 .status {

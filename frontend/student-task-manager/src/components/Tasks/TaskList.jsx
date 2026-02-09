@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import TaskCard from './TaskCard';
 import TaskDetailsModal from '../Modals/TaskDetailsModal';
 import { FaTasks } from 'react-icons/fa';
@@ -18,7 +18,9 @@ const TaskList = ({ tasks, loading, error, onUpdate, onDelete, onStatusToggle })
                 setSelectedTask(null);
             }
         }
-    }, [tasks]);
+    }, [tasks, selectedTask]); // added selectedTask to dependency
+
+    const handleSelectTask = useCallback((t) => setSelectedTask(t), []);
 
     if (loading) {
         return (
@@ -54,10 +56,10 @@ const TaskList = ({ tasks, loading, error, onUpdate, onDelete, onStatusToggle })
                     <TaskCard
                         key={task.id}
                         task={task}
-                        onEdit={(t) => setSelectedTask(t)}
+                        onEdit={handleSelectTask}
                         onDelete={onDelete}
                         onStatusToggle={onStatusToggle}
-                        onClick={(t) => setSelectedTask(t)}
+                        onClick={handleSelectTask}
                     />
                 ))}
             </div>
