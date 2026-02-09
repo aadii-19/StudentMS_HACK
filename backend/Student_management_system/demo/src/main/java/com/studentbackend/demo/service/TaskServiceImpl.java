@@ -25,29 +25,30 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public List<Task> getAllTasks(Status status, Priority priority, String sort) {
 
+        Sort sortBy = Sort.unsorted();
+        if ("dueDate".equalsIgnoreCase(sort)) {
+            sortBy = Sort.by("dueDate").ascending();
+        }
+
         if (status != null && priority != null) {
-            return taskRepository.findByStatusAndPriority(status, priority);
+            return taskRepository.findByStatusAndPriority(status, priority, sortBy);
         }
 
         if (status != null) {
-            return taskRepository.findByStatus(status);
+            return taskRepository.findByStatus(status, sortBy);
         }
 
         if (priority != null) {
-            return taskRepository.findByPriority(priority);
+            return taskRepository.findByPriority(priority, sortBy);
         }
 
-        if ("dueDate".equalsIgnoreCase(sort)) {
-            return taskRepository.findAll(Sort.by("dueDate"));
-        }
-
-        return taskRepository.findAll();
+        return taskRepository.findAll(sortBy);
     }
 
     @Override
     public Task getTaskById(Long id) {
         return taskRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Task not found"));
+                .orElseThrow(() -> new RuntimeException("Task not found with id: " + id));
     }
 
     @Override
@@ -77,9 +78,10 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public TaskSummaryDto getTaskSummary() {
+
         long total = taskRepository.count();
-        long completed = taskRepository.findByStatus(Status.COMPLETED).size();
-        long pending = taskRepository.findByStatus(Status.PENDING).size();
+        long completed = taskRepository.countByStatus(Status.COMPLETED);
+        long pending = taskRepository.countByStatus(Status.PENDING);
 
         return new TaskSummaryDto(total, completed, pending);
     }
