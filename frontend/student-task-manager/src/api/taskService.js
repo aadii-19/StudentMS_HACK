@@ -1,11 +1,12 @@
 import axios from 'axios';
 
-const API_BASE_URL = 'http://localhost:8080/api/tasks';
+const API_BASE_URL = 'https://nondisciplinable-deerfly-avery.ngrok-free.dev/api/tasks';
 
 const api = axios.create({
   baseURL: API_BASE_URL,
   headers: {
     'Content-Type': 'application/json',
+    'ngrok-skip-browser-warning': 'true', // Skip ngrok's HTML interstitial
   },
 });
 
